@@ -1,0 +1,187 @@
+title
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NOIR MOBILE | Telefonlar do‘koni</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+
+<section id="authPage">
+  <div class="auth-hero">
+    <a class="logo" href="#">NOIR<span>.</span>MOBILE</a>
+    <div class="hero-text">
+      <div class="eyebrow">PREMIUM TECHNOLOGY STORE</div>
+      <h1>Texnologiya.<br><span>Yangi daraja.</span></h1>
+      <p>Eng zamonaviy smartfonlar, ishonchli xizmat va qulay xarid — barchasi bitta joyda.</p>
+    </div>
+    <div class="hero-bottom">© 2026 NOIR MOBILE</div>
+  </div>
+
+  <div class="auth-panel">
+    <h2 id="authTitle">Xush kelibsiz</h2>
+    <p id="authSubtitle">Do‘konga kirish uchun hisobingizga kiring.</p>
+
+    <div class="tabs">
+      <button id="loginTab" class="active" type="button">Kirish</button>
+      <button id="registerTab" type="button">Registratsiya</button>
+    </div>
+
+    <form id="authForm">
+      <div class="field hidden" id="nameField">
+        <label for="fullName">Ismingiz</label>
+        <input id="fullName" type="text" placeholder="Ismingizni kiriting">
+      </div>
+      <div class="field">
+        <label for="email">Email manzil</label>
+        <input id="email" type="email" placeholder="example@gmail.com" required>
+      </div>
+      <div class="field">
+        <label for="password">Parol</label>
+        <input id="password" type="password" placeholder="Kamida 6 ta belgi" required minlength="6">
+      </div>
+      <p id="authError" class="error"></p>
+      <button class="primary" id="authSubmit" type="submit">Kirish →</button>
+    </form>
+    <p class="note">NOIR MOBILE — zamonaviy telefonlar do‘koni.</p>
+  </div>
+</section>
+
+<div id="storePage" class="hidden">
+  <header>
+    <a class="logo" href="#">NOIR<span>.</span>MOBILE</a>
+    <nav class="nav">
+      <a href="#home">Bosh sahifa</a>
+      <a href="#catalog">Telefonlar</a>
+      <a href="#services">Xizmatlar</a>
+    </nav>
+    <div class="header-right">
+      <button class="cart-btn" id="openCart">
+        Savat <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="logout-btn" id="logoutBtn">Chiqish</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div>
+        <div class="eyebrow">YANGI AVLOD SMARTFONLARI</div>
+        <h1>Oddiy emas.<br><span>O‘zgacha.</span></h1>
+        <p>O‘zingizga mos telefonni toping. Zamonaviy dizayn va qulay xarid bir joyda.</p>
+        <button class="primary" id="shopNow">Telefonlarni ko‘rish ↗</button>
+      </div>
+      <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=800&q=85" alt="Smartfon">
+    </section>
+
+    <section id="catalog">
+      <div class="section-head">
+        <div>
+          <h2>Bizning telefonlar</h2>
+          <p>O‘zingizga mos qurilmani tanlang.</p>
+        </div>
+        <input class="search" id="searchInput" type="search" placeholder="Telefon qidirish...">
+      </div>
+
+      <div class="filters" id="filters">
+        <button class="filter active" data-brand="Barchasi">Barchasi</button>
+        <button class="filter" data-brand="Apple">Apple</button>
+        <button class="filter" data-brand="Samsung">Samsung</button>
+        <button class="filter" data-brand="Xiaomi">Xiaomi</button>
+      </div>
+      <div class="products" id="products"></div>
+    </section>
+
+    <section id="services">
+      <div class="section-head">
+        <div>
+          <h2>Nega NOIR MOBILE?</h2>
+          <p>Xaridingizni oson va qulay qiling.</p>
+        </div>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <div class="symbol">◈</div>
+          <h3>Sifatli mahsulotlar</h3>
+          <p>Telefonlarning xususiyatlarini solishtiring.</p>
+        </article>
+        <article class="feature">
+          <div class="symbol">↗</div>
+          <h3>Qulay buyurtma</h3>
+          <p>Telefonni savatga qo‘shing va buyurtma bering.</p>
+        </article>
+        <article class="feature">
+          <div class="symbol">◇</div>
+          <h3>Zamonaviy dizayn</h3>
+          <p>Qora, oq va kulrang ranglardagi interfeys.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="logo" href="#">NOIR<span>.</span>MOBILE</a>
+    <span>© 2026 NOIR MOBILE</span>
+  </footer>
+</div>
+
+<div class="modal hidden" id="cartModal">
+  <div class="modal-card">
+    <div class="modal-top">
+      <h2>Savatchangiz</h2>
+      <button class="close" data-close="cartModal">×</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="total"><span>Jami:</span><span id="cartTotal">0 so‘m</span></div>
+    <button class="primary" id="checkoutBtn">Buyurtma berish →</button>
+  </div>
+</div>
+
+<div class="modal hidden" id="detailsModal">
+  <div class="modal-card">
+    <div class="modal-top">
+      <h2 id="detailTitle">Telefon haqida</h2>
+      <button class="close" data-close="detailsModal">×</button>
+    </div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div class="modal hidden" id="orderModal">
+  <div class="modal-card">
+    <div class="modal-top">
+      <h2>Buyurtma berish</h2>
+      <button class="close" data-close="orderModal">×</button>
+    </div>
+    <p class="info-text">Yetkazib berish ma’lumotlarini kiriting.</p>
+    <form id="orderForm">
+      <div class="field">
+        <label for="orderName">Ism va familiya</label>
+        <input id="orderName" required placeholder="Ismingiz">
+      </div>
+      <div class="field">
+        <label for="orderPhone">Telefon raqam</label>
+        <input id="orderPhone" type="tel" required placeholder="+998 90 123 45 67">
+      </div>
+      <div class="field">
+        <label for="orderAddress">Manzil</label>
+        <input id="orderAddress" required placeholder="Toshkent, ko‘cha, uy">
+      </div>
+      <div class="field">
+        <label for="orderComment">Izoh</label>
+        <input id="orderComment" placeholder="Ixtiyoriy">
+      </div>
+      <div class="total"><span>Jami:</span><span id="orderTotal">0 so‘m</span></div>
+      <p id="orderError" class="error"></p>
+      <button class="primary" type="submit">Buyurtmani tasdiqlash</button>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+</body>
+</html>

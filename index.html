@@ -1,0 +1,753 @@
+
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NOIR MOBILE | Telefonlar do‘koni</title>
+<style>
+:root {
+  --bg: #090909;
+  --panel: #141414;
+  --panel2: #1d1d1d;
+  --white: #ffffff;
+  --muted: #a5a5a5;
+  --line: #303030;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: Arial, Helvetica, sans-serif;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+.hidden { display: none !important; }
+button:focus-visible, input:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 3px;
+}
+a { color: inherit; text-decoration: none; }
+
+/* KIRISH OYNASI */
+#authPage {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 430px;
+  background: #0b0b0b;
+}
+.auth-hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 45px 7%;
+  background:
+    linear-gradient(90deg, #080808 0%, #080808db 50%, #08080850 100%),
+    url("https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1400&q=85")
+    center/cover;
+}
+.logo {
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: 4px;
+}
+.logo span { color: #888; }
+.hero-text { max-width: 650px; }
+.eyebrow {
+  color: #aaa;
+  font-size: 11px;
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+}
+.hero-text h1 {
+  font-size: clamp(42px, 6vw, 78px);
+  line-height: 1.02;
+  margin-bottom: 24px;
+}
+.hero-text h1 span { color: #777; }
+.hero-text p {
+  color: #c4c4c4;
+  line-height: 1.8;
+  max-width: 440px;
+}
+.hero-bottom { color: #777; font-size: 12px; }
+.auth-panel {
+  padding: 55px 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid #292929;
+}
+.auth-panel h2 { font-size: 30px; margin-bottom: 10px; }
+.auth-panel > p { color: var(--muted); font-size: 14px; margin-bottom: 30px; }
+.tabs { display: flex; gap: 8px; margin-bottom: 25px; }
+.tabs button {
+  flex: 1; padding: 12px;
+  border: 1px solid var(--line);
+  background: transparent; color: #aaa; border-radius: 8px;
+}
+.tabs button.active { background: white; color: black; }
+.field { margin-bottom: 17px; }
+.field label { display: block; color: #bbb; font-size: 12px; margin-bottom: 9px; }
+.field input {
+  width: 100%; padding: 14px;
+  border: 1px solid #363636; background: #161616;
+  color: white; border-radius: 8px;
+}
+.primary {
+  width: 100%; padding: 15px;
+  border: none; border-radius: 8px;
+  color: #080808; background: white;
+  font-weight: 800; transition: .2s;
+}
+.primary:hover { background: #cfcfcf; }
+.note { color: #777; font-size: 11px; line-height: 1.7; margin-top: 18px; }
+.error { color: #ff9292; font-size: 13px; margin-bottom: 12px; }
+.demo-note { color: #888; font-size: 12px; margin-top: 14px; }
+
+/* ASOSIY SAYT */
+header {
+  height: 76px; padding: 0 6%;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  background: #0b0b0bf5;
+  position: sticky; top: 0; z-index: 10;
+}
+header .logo { font-size: 21px; }
+.nav { display: flex; gap: 27px; color: #aaa; font-size: 13px; }
+.nav a:hover { color: white; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+.cart-btn, .logout-btn {
+  padding: 10px 13px; border: 1px solid #383838;
+  border-radius: 7px; background: #171717; color: white;
+}
+.cart-count { background: white; color: black; padding: 2px 6px; border-radius: 20px; font-size: 11px; }
+main { padding: 35px 6% 70px; }
+.hero {
+  min-height: 390px; border: 1px solid #303030;
+  border-radius: 16px; overflow: hidden;
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; padding: 35px 6%;
+  background: radial-gradient(ellipse at 75% 50%, #454545 0%, #222 25%, #111 60%, #101010 100%);
+}
+.hero h1 { font-size: clamp(36px, 5vw, 65px); line-height: 1.05; margin-bottom: 18px; }
+.hero h1 span { color: #999; }
+.hero p { color: #b7b7b7; line-height: 1.7; max-width: 400px; }
+.hero img { width: 100%; max-height: 330px; object-fit: contain; filter: drop-shadow(0 20px 35px #000); }
+.hero .primary { margin-top: 24px; width: auto; padding: 14px 25px; }
+.section-head {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 20px; margin: 45px 0 23px;
+}
+.section-head h2 { font-size: 27px; }
+.section-head p { color: #888; font-size: 13px; margin-top: 7px; }
+.search {
+  width: min(300px, 100%); padding: 13px 15px;
+  background: #171717; border: 1px solid #333;
+  color: white; border-radius: 8px;
+}
+.filters { display: flex; gap: 9px; flex-wrap: wrap; margin-bottom: 24px; }
+.filter {
+  background: #151515; border: 1px solid #333;
+  color: #aaa; border-radius: 30px; padding: 9px 17px;
+}
+.filter.active { background: white; color: black; border-color: white; }
+.products {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 17px;
+}
+.product {
+  background: #141414; border: 1px solid #292929;
+  border-radius: 12px; overflow: hidden; transition: .25s;
+}
+.product:hover { transform: translateY(-5px); border-color: #666; }
+.product-img {
+  height: 220px; padding: 18px;
+  background: linear-gradient(140deg, #252525, #101010);
+  display: flex; align-items: center; justify-content: center;
+}
+.product-img img { max-height: 100%; max-width: 100%; object-fit: contain; }
+.product-body { padding: 17px; }
+.brand { color: #888; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; }
+.product h3 { font-size: 16px; margin: 9px 0; }
+.spec { color: #999; font-size: 12px; line-height: 1.7; min-height: 38px; }
+.price { font-size: 18px; font-weight: bold; margin: 14px 0; }
+.product-actions { display: flex; gap: 7px; }
+.add-btn, .details-btn {
+  border-radius: 7px; padding: 11px 8px; font-size: 12px;
+}
+.add-btn { flex: 1; background: white; color: black; border: none; font-weight: bold; }
+.details-btn { background: transparent; color: white; border: 1px solid #444; }
+.empty { grid-column: 1/-1; padding: 40px; color: #999; text-align: center; }
+.features {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 15px; margin-top: 55px;
+}
+.feature { background: #131313; border: 1px solid #292929; border-radius: 10px; padding: 25px; }
+.feature .symbol { font-size: 24px; margin-bottom: 15px; }
+.feature h3 { font-size: 15px; margin-bottom: 9px; }
+.feature p { color: #999; font-size: 12px; line-height: 1.7; }
+footer { border-top: 1px solid #292929; padding: 28px 6%; color: #777; font-size: 12px; display: flex; justify-content: space-between; gap: 15px; }
+
+/* MODAL */
+.modal {
+  position: fixed; inset: 0; z-index: 30;
+  background: #000c; display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-card {
+  background: #171717; border: 1px solid #393939;
+  border-radius: 14px; width: 100%; max-width: 520px;
+  max-height: 90vh; overflow: auto; padding: 26px;
+}
+.modal-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+.close { background: none; border: none; color: white; font-size: 26px; }
+.cart-item { display: flex; gap: 13px; align-items: center; border-bottom: 1px solid #333; padding: 13px 0; }
+.cart-item img { width: 65px; height: 65px; object-fit: contain; background: #222; border-radius: 8px; }
+.cart-info { flex: 1; }
+.cart-info p { color: #aaa; font-size: 13px; margin-top: 7px; }
+.remove { background: none; border: 1px solid #444; color: #ccc; padding: 7px; border-radius: 6px; }
+.total { display: flex; justify-content: space-between; padding: 20px 0; font-size: 18px; font-weight: bold; }
+.qty { display: flex; align-items: center; gap: 10px; margin-top: 9px; }
+.qty button { background: #292929; border: 0; color: white; padding: 4px 9px; border-radius: 4px; }
+.info-text { color: #aaa; font-size: 13px; line-height: 1.8; margin-bottom: 18px; }
+.toast {
+  position: fixed; bottom: 25px; right: 25px; z-index: 50;
+  background: white; color: black; padding: 15px 20px; border-radius: 8px;
+  box-shadow: 0 5px 25px #0008;
+}
+@media(max-width: 1000px) {
+  #authPage { grid-template-columns: 1fr 390px; }
+  .products { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .nav { gap: 13px; }
+}
+@media(max-width: 700px) {
+  #authPage { grid-template-columns: 1fr; }
+  .auth-hero { min-height: 270px; padding: 25px; }
+  .hero-text { margin: 40px 0 25px; }
+  .hero-text h1 { font-size: 43px; }
+  .hero-bottom { display: none; }
+  .auth-panel { border-left: none; padding: 35px 25px; }
+  header { padding: 0 4%; height: 65px; }
+  header .logo { font-size: 16px; letter-spacing: 2px; }
+  .nav { display: none; }
+  .header-right { gap: 6px; }
+  .cart-btn, .logout-btn { padding: 9px 8px; font-size: 11px; }
+  main { padding: 20px 4% 45px; }
+  .hero { grid-template-columns: 1fr; padding: 28px; }
+  .hero img { max-height: 210px; }
+  .hero h1 { font-size: 42px; }
+  .section-head { align-items: flex-start; flex-direction: column; margin-top: 35px; }
+  .search { width: 100%; }
+  .products { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .product-img { height: 155px; padding: 12px; }
+  .product-body { padding: 12px; }
+  .product h3 { font-size: 14px; }
+  .price { font-size: 15px; }
+  .details-btn { padding: 10px 6px; }
+  .features { grid-template-columns: 1fr; margin-top: 35px; }
+  footer { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- RO'YXATDAN O'TISH -->
+<section id="authPage">
+  <div class="auth-hero">
+    <a class="logo" href="#">NOIR<span>.</span>MOBILE</a>
+    <div class="hero-text">
+      <div class="eyebrow">PREMIUM TECHNOLOGY STORE</div>
+      <h1>Texnologiya.<br><span>Yangi daraja.</span></h1>
+      <p>Eng zamonaviy smartfonlar, ishonchli xizmat va qulay xarid — barchasi bitta joyda.</p>
+    </div>
+    <div class="hero-bottom">© 2026 NOIR MOBILE · BARCHA HUQUQLAR HIMOYALANGAN</div>
+  </div>
+
+  <div class="auth-panel">
+    <h2 id="authTitle">Xush kelibsiz</h2>
+    <p id="authSubtitle">Do‘konga kirish uchun hisobingizga kiring.</p>
+    <div class="tabs">
+      <button id="loginTab" class="active" type="button">Kirish</button>
+      <button id="registerTab" type="button">Registratsiya</button>
+    </div>
+    <form id="authForm">
+      <div class="field hidden" id="nameField">
+        <label for="fullName">Ismingiz</label>
+        <input id="fullName" type="text" placeholder="Ismingizni kiriting" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="email">Email manzil</label>
+        <input id="email" type="email" placeholder="example@gmail.com" required autocomplete="email">
+      </div>
+      <div class="field">
+        <label for="password">Parol</label>
+        <input id="password" type="password" placeholder="Kamida 6 ta belgi" required minlength="6" autocomplete="current-password">
+      </div>
+      <p class="error" id="authError" role="alert"></p>
+      <button class="primary" id="authSubmit" type="submit">Kirish →</button>
+    </form>
+    <p class="note">Bu demo sayt. Registratsiya ma’lumotlari ushbu brauzerda saqlanadi. Haqiqiy do‘kon uchun xavfsiz server kerak.</p>
+  </div>
+</section>
+
+<!-- MAGAZIN -->
+<div id="storePage" class="hidden">
+<header>
+  <a class="logo" href="#">NOIR<span>.</span>MOBILE</a>
+  <nav class="nav">
+    <a href="#home">Bosh sahifa</a>
+    <a href="#catalog">Telefonlar</a>
+    <a href="#services">Xizmatlar</a>
+  </nav>
+  <div class="header-right">
+    <button class="cart-btn" id="openCart">Savat <span class="cart-count" id="cartCount">0</span></button>
+    <button class="logout-btn" id="logoutBtn">Chiqish</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="home">
+    <div>
+      <div class="eyebrow">YANGI AVLOD SMARTFONLARI</div>
+      <h1>Oddiy emas.<br><span>O‘zgacha.</span></h1>
+      <p>O‘zingizga mos telefonni toping. Zamonaviy dizayn, kuchli imkoniyatlar va qulay xarid bir joyda.</p>
+      <button class="primary" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">Telefonlarni ko‘rish ↗</button>
+    </div>
+    <img src="https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=800&q=85" alt="Zamonaviy smartfon">
+  </section>
+
+  <section id="catalog">
+    <div class="section-head">
+      <div>
+        <h2>Bizning telefonlar</h2>
+        <p>O‘zingizga mos qurilmani tanlang.</p>
+      </div>
+      <input class="search" id="searchInput" type="search" placeholder="⌕  Telefon qidirish...">
+    </div>
+
+    <div class="filters" id="filters">
+      <button class="filter active" data-brand="Barchasi">Barchasi</button>
+      <button class="filter" data-brand="Apple">Apple</button>
+      <button class="filter" data-brand="Samsung">Samsung</button>
+      <button class="filter" data-brand="Xiaomi">Xiaomi</button>
+    </div>
+
+    <div class="products" id="products"></div>
+  </section>
+
+  <section id="services">
+    <div class="section-head">
+      <div>
+        <h2>Nega NOIR MOBILE?</h2>
+        <p>Xaridingizni oson va qulay qiling.</p>
+      </div>
+    </div>
+    <div class="features">
+      <article class="feature">
+        <div class="symbol">◈</div>
+        <h3>Sifatli mahsulotlar</h3>
+        <p>Telefonlar haqida asosiy ma’lumotlar va xususiyatlar katalogda berilgan.</p>
+      </article>
+      <article class="feature">
+        <div class="symbol">↗</div>
+        <h3>Qulay buyurtma</h3>
+        <p>Kerakli telefonlarni savatga qo‘shing va buyurtma formasini to‘ldiring.</p>
+      </article>
+      <article class="feature">
+        <div class="symbol">◇</div>
+        <h3>Zamonaviy dizayn</h3>
+        <p>Qora, oq va kulrang ranglardagi sodda, chiroyli interfeys.</p>
+      </article>
+    </div>
+  </section>
+</main>
+<footer>
+  <a class="logo" href="#">NOIR<span>.</span>MOBILE</a>
+  <span>© 2026 NOIR MOBILE · Demo internet-do‘kon</span>
+</footer>
+</div>
+
+<!-- MODAL OYNALAR -->
+<div class="modal hidden" id="cartModal">
+  <div class="modal-card">
+    <div class="modal-top"><h2>Savatchangiz</h2><button class="close" data-close="cartModal" aria-label="Yopish">×</button></div>
+    <div id="cartItems"></div>
+    <div class="total"><span>Jami:</span><span id="cartTotal">0 so‘m</span></div>
+    <button class="primary" id="checkoutBtn">Buyurtma berish →</button>
+  </div>
+</div>
+
+<div class="modal hidden" id="detailsModal">
+  <div class="modal-card">
+    <div class="modal-top"><h2 id="detailTitle">Telefon haqida</h2><button class="close" data-close="detailsModal" aria-label="Yopish">×</button></div>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div class="modal hidden" id="orderModal">
+  <div class="modal-card">
+    <div class="modal-top"><h2>Buyurtma berish</h2><button class="close" data-close="orderModal" aria-label="Yopish">×</button></div>
+    <p class="info-text">Yetkazib berish uchun ma’lumotlaringizni kiriting.</p>
+    <form id="orderForm">
+      <div class="field"><label for="orderName">Ism va familiya</label><input id="orderName" required placeholder="Ismingiz"></div>
+      <div class="field"><label for="orderPhone">Telefon raqam</label><input id="orderPhone" required type="tel" placeholder="+998 90 123 45 67"></div>
+      <div class="field"><label for="orderAddress">Yetkazib berish manzili</label><input id="orderAddress" required placeholder="Toshkent, ko‘cha, uy"></div>
+      <div class="field"><label for="orderComment">Izoh (ixtiyoriy)</label><input id="orderComment" placeholder="Qo‘shimcha ma’lumot"></div>
+      <div class="total"><span>Jami:</span><span id="orderTotal">0 so‘m</span></div>
+      <p class="error" id="orderError"></p>
+      <button class="primary" type="submit">Buyurtmani tasdiqlash</button>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script>
+const money = n => new Intl.NumberFormat("uz-UZ").format(n) + " so‘m";
+
+const phones = [
+  {
+    id:1, brand:"Apple", name:"iPhone 16 Pro",
+    price:14500000, memory:"256 GB", ram:"8 GB",
+    screen:"6.3 dyuym OLED", camera:"48 MP asosiy kamera",
+    battery:"3582 mAh", chip:"A18 Pro",
+    image:"https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=600&q=85",
+    description:"Kuchli protsessor, yuqori sifatli ekran va professional suratga olish imkoniyatlariga ega premium smartfon."
+  },
+  {
+    id:2, brand:"Apple", name:"iPhone 15",
+    price:9500000, memory:"128 GB", ram:"6 GB",
+    screen:"6.1 dyuym OLED", camera:"48 MP asosiy kamera",
+    battery:"3349 mAh", chip:"A16 Bionic",
+    image:"https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=600&q=85",
+    description:"Yengil korpus, sifatli kamera va kundalik foydalanish uchun tezkor ishlash."
+  },
+  {
+    id:3, brand:"Apple", name:"iPhone 14",
+    price:7200000, memory:"128 GB", ram:"6 GB",
+    screen:"6.1 dyuym OLED", camera:"12 MP ikki kamera",
+    battery:"3279 mAh", chip:"A15 Bionic",
+    image:"https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?auto=format&fit=crop&w=600&q=85",
+    description:"Chiroyli dizayn, yaxshi kamera va ishonchli kundalik ishlash imkoniyati."
+  },
+  {
+    id:4, brand:"Samsung", name:"Galaxy S25 Ultra",
+    price:16500000, memory:"256 GB", ram:"12 GB",
+    screen:"6.9 dyuym AMOLED", camera:"200 MP asosiy kamera",
+    battery:"5000 mAh", chip:"Snapdragon 8 Elite",
+    image:"https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=600&q=85",
+    description:"Katta va ravshan ekran, ilg‘or kamera tizimi va yuqori unumdorlik."
+  },
+  {
+    id:5, brand:"Samsung", name:"Galaxy A55",
+    price:4800000, memory:"128 GB", ram:"8 GB",
+    screen:"6.6 dyuym Super AMOLED", camera:"50 MP asosiy kamera",
+    battery:"5000 mAh", chip:"Exynos 1480",
+    image:"https://images.unsplash.com/photo-1603891128711-11b4b03bb138?auto=format&fit=crop&w=600&q=85",
+    description:"Muvozanatli narx, katta ekran va kundalik foydalanishga mos batareya."
+  },
+  {
+    id:6, brand:"Samsung", name:"Galaxy S24",
+    price:8900000, memory:"256 GB", ram:"8 GB",
+    screen:"6.2 dyuym AMOLED", camera:"50 MP asosiy kamera",
+    battery:"4000 mAh", chip:"Exynos 2400",
+    image:"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=85",
+    description:"Ixcham premium telefon, tezkor ishlash va sifatli suratlar."
+  },
+  {
+    id:7, brand:"Xiaomi", name:"Redmi Note 13",
+    price:2300000, memory:"128 GB", ram:"6 GB",
+    screen:"6.67 dyuym AMOLED", camera:"108 MP asosiy kamera",
+    battery:"5000 mAh", chip:"Snapdragon 685",
+    image:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=600&q=85",
+    description:"Katta AMOLED ekran, kundalik vazifalar va o‘yinlar uchun qulay smartfon."
+  },
+  {
+    id:8, brand:"Xiaomi", name:"Redmi Note 14",
+    price:2800000, memory:"256 GB", ram:"8 GB",
+    screen:"6.67 dyuym AMOLED", camera:"108 MP asosiy kamera",
+    battery:"5500 mAh", chip:"Helio G99-Ultra",
+    image:"https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=600&q=85",
+    description:"Katta xotira, ravshan ekran va uzoq ishlashga mo‘ljallangan batareya."
+  }
+];
+
+// KIRISH VA REGISTRATSIYA
+let authMode = "login";
+let currentUser = null;
+let activeBrand = "Barchasi";
+let cart = [];
+let toastTimer;
+
+const $ = id => document.getElementById(id);
+
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem("noir_users") || "[]"); }
+  catch { return []; }
+}
+
+function setAuthMode(mode) {
+  authMode = mode;
+  $("loginTab").classList.toggle("active", mode === "login");
+  $("registerTab").classList.toggle("active", mode === "register");
+  $("nameField").classList.toggle("hidden", mode !== "register");
+  $("fullName").required = mode === "register";
+  $("authTitle").textContent = mode === "login" ? "Xush kelibsiz" : "Hisob yarating";
+  $("authSubtitle").textContent = mode === "login"
+    ? "Do‘konga kirish uchun hisobingizga kiring."
+    : "Ro‘yxatdan o‘ting va xaridni boshlang.";
+  $("authSubmit").textContent = mode === "login" ? "Kirish →" : "Ro‘yxatdan o‘tish →";
+  $("password").autocomplete = mode === "login" ? "current-password" : "new-password";
+  $("authError").textContent = "";
+}
+$("loginTab").addEventListener("click", () => setAuthMode("login"));
+$("registerTab").addEventListener("click", () => setAuthMode("register"));
+
+$("authForm").addEventListener("submit", e => {
+  e.preventDefault();
+  const email = $("email").value.trim().toLowerCase();
+  const password = $("password").value;
+  const users = getUsers();
+
+  if (authMode === "register") {
+    const name = $("fullName").value.trim();
+    if (!name) return;
+    if (users.some(u => u.email === email)) {
+      $("authError").textContent = "Bu email oldin ro‘yxatdan o‘tgan.";
+      return;
+    }
+    users.push({ name, email, password });
+    localStorage.setItem("noir_users", JSON.stringify(users));
+    currentUser = { name, email };
+    enterStore();
+  } else {
+    const user = users.find(u => u.email === email && u.password === password);
+    if (!user) {
+      $("authError").textContent = "Email yoki parol noto‘g‘ri. Avval registratsiyadan o‘ting.";
+      return;
+    }
+    currentUser = { name: user.name, email: user.email };
+    enterStore();
+  }
+});
+
+function enterStore() {
+  $("authPage").classList.add("hidden");
+  $("storePage").classList.remove("hidden");
+  $("orderName").value = currentUser?.name || "";
+  renderProducts();
+  updateCart();
+  window.scrollTo(0, 0);
+}
+
+$("logoutBtn").addEventListener("click", () => {
+  currentUser = null;
+  cart = [];
+  $("storePage").classList.add("hidden");
+  $("authPage").classList.remove("hidden");
+  $("authForm").reset();
+  setAuthMode("login");
+});
+
+// MAHSULOTLAR
+function renderProducts() {
+  const q = $("searchInput").value.trim().toLowerCase();
+  const filtered = phones.filter(p =>
+    (activeBrand === "Barchasi" || p.brand === activeBrand) &&
+    (p.name.toLowerCase().includes(q) ||
+     p.brand.toLowerCase().includes(q) ||
+     p.memory.toLowerCase().includes(q))
+  );
+
+  $("products").innerHTML = filtered.length ? filtered.map(p => `
+    <article class="product">
+      <div class="product-img">
+        <img src="${p.image}" alt="${p.name}" loading="lazy">
+      </div>
+      <div class="product-body">
+        <div class="brand">${p.brand}</div>
+        <h3>${p.name}</h3>
+        <p class="spec">${p.memory} xotira · ${p.ram} RAM<br>${p.screen}</p>
+        <div class="price">${money(p.price)}</div>
+        <div class="product-actions">
+          <button class="add-btn" data-add="${p.id}">+ Savatga</button>
+          <button class="details-btn" data-details="${p.id}">Batafsil</button>
+        </div>
+      </div>
+    </article>
+  `).join("") : `<div class="empty">Bu nomdagi telefon topilmadi. Boshqa nom yozib ko‘ring.</div>`;
+}
+
+$("searchInput").addEventListener("input", renderProducts);
+$("filters").addEventListener("click", e => {
+  const btn = e.target.closest("[data-brand]");
+  if (!btn) return;
+  activeBrand = btn.dataset.brand;
+  document.querySelectorAll(".filter").forEach(b => b.classList.toggle("active", b === btn));
+  renderProducts();
+});
+
+$("products").addEventListener("click", e => {
+  const add = e.target.closest("[data-add]");
+  const details = e.target.closest("[data-details]");
+  if (add) addToCart(Number(add.dataset.add));
+  if (details) showDetails(Number(details.dataset.details));
+});
+
+function showDetails(id) {
+  const p = phones.find(x => x.id === id);
+  if (!p) return;
+  $("detailTitle").textContent = p.name;
+  $("detailContent").innerHTML = `
+    <img src="${p.image}" alt="${p.name}" style="width:100%;height:200px;object-fit:contain;background:#222;border-radius:10px;margin-bottom:18px">
+    <div class="brand">${p.brand}</div>
+    <h2 style="margin:8px 0 14px">${p.name}</h2>
+    <p class="info-text">${p.description}</p>
+    <p class="info-text">
+      <b>Xotira:</b> ${p.memory}<br>
+      <b>Tezkor xotira (RAM):</b> ${p.ram}<br>
+      <b>Ekran:</b> ${p.screen}<br>
+      <b>Kamera:</b> ${p.camera}<br>
+      <b>Batareya:</b> ${p.battery}<br>
+      <b>Protsessor:</b> ${p.chip}
+    </p>
+    <h2 style="margin-bottom:18px">${money(p.price)}</h2>
+    <button class="primary" id="detailAdd">Savatga qo‘shish</button>
+  `;
+  $("detailsModal").classList.remove("hidden");
+  $("detailAdd").addEventListener("click", () => {
+    addToCart(id);
+    $("detailsModal").classList.add("hidden");
+  });
+}
+
+// SAVATCHA
+function addToCart(id) {
+  const existing = cart.find(item => item.id === id);
+  if (existing) existing.qty++;
+  else cart.push({ id, qty: 1 });
+  updateCart();
+  showToast("Telefon savatga qo‘shildi ✓");
+}
+
+function updateCart() {
+  $("cartCount").textContent = cart.reduce((s, i) => s + i.qty, 0);
+  const total = cart.reduce((s, item) => {
+    const p = phones.find(x => x.id === item.id);
+    return s + (p ? p.price * item.qty : 0);
+  }, 0);
+  $("cartTotal").textContent = money(total);
+  $("orderTotal").textContent = money(total);
+
+  if (!cart.length) {
+    $("cartItems").innerHTML = '<p class="info-text">Savatcha hozircha bo‘sh. Telefon tanlash uchun katalogga qayting.</p>';
+    $("checkoutBtn").disabled = true;
+    $("checkoutBtn").style.opacity = ".5";
+  } else {
+    $("checkoutBtn").disabled = false;
+    $("checkoutBtn").style.opacity = "1";
+    $("cartItems").innerHTML = cart.map(item => {
+      const p = phones.find(x => x.id === item.id);
+      return `
+        <div class="cart-item">
+          <img src="${p.image}" alt="${p.name}">
+          <div class="cart-info">
+            <b>${p.name}</b>
+            <p>${money(p.price)} × ${item.qty}</p>
+            <div class="qty">
+              <button data-minus="${p.id}" aria-label="Kamaytirish">−</button>
+              <span>${item.qty}</span>
+              <button data-plus="${p.id}" aria-label="Ko‘paytirish">+</button>
+            </div>
+          </div>
+          <button class="remove" data-remove="${p.id}">O‘chirish</button>
+        </div>`;
+    }).join("");
+  }
+}
+
+$("cartItems").addEventListener("click", e => {
+  const minus = e.target.closest("[data-minus]");
+  const plus = e.target.closest("[data-plus]");
+  const remove = e.target.closest("[data-remove]");
+  if (minus) {
+    const item = cart.find(i => i.id === Number(minus.dataset.minus));
+    if (item) item.qty--;
+    cart = cart.filter(i => i.qty > 0);
+  }
+  if (plus) {
+    const item = cart.find(i => i.id === Number(plus.dataset.plus));
+    if (item) item.qty++;
+  }
+  if (remove) cart = cart.filter(i => i.id !== Number(remove.dataset.remove));
+  updateCart();
+});
+
+$("openCart").addEventListener("click", () => $("cartModal").classList.remove("hidden"));
+$("checkoutBtn").addEventListener("click", () => {
+  if (!cart.length) return;
+  $("cartModal").classList.add("hidden");
+  $("orderModal").classList.remove("hidden");
+  updateCart();
+});
+
+$("orderForm").addEventListener("submit", e => {
+  e.preventDefault();
+  if (!cart.length) return;
+  const order = {
+    number: "NM-" + Date.now().toString().slice(-8),
+    customer: $("orderName").value.trim(),
+    phone: $("orderPhone").value.trim(),
+    address: $("orderAddress").value.trim(),
+    comment: $("orderComment").value.trim(),
+    items: cart.map(item => {
+      const p = phones.find(x => x.id === item.id);
+      return { name: p.name, qty: item.qty, price: p.price };
+    }),
+    total: cart.reduce((sum, item) =>
+      sum + phones.find(p => p.id === item.id).price * item.qty, 0),
+    createdAt: new Date().toISOString()
+  };
+
+  // Demo buyurtma: ushbu brauzerda saqlanadi.
+  let orders = [];
+  try { orders = JSON.parse(localStorage.getItem("noir_orders") || "[]"); }
+  catch {}
+  orders.push(order);
+  localStorage.setItem("noir_orders", JSON.stringify(orders));
+
+  $("orderModal").classList.add("hidden");
+  $("orderForm").reset();
+  cart = [];
+  updateCart();
+  showToast("Buyurtma #" + order.number + " demo rejimida saqlandi.");
+});
+
+document.querySelectorAll("[data-close]").forEach(btn => {
+  btn.addEventListener("click", () => $(btn.dataset.close).classList.add("hidden"));
+});
+
+document.querySelectorAll(".modal").forEach(modal => {
+  modal.addEventListener("click", e => {
+    if (e.target === modal) modal.classList.add("hidden");
+  });
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden"));
+  }
+});
+
+function showToast(message) {
+  $("toast").textContent = message;
+  $("toast").classList.remove("hidden");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => $("toast").classList.add("hidden"), 2600);
+}
+</script>
+</body>
+</html>
+<limk rel="stylesheet"href="./style.css
+"
